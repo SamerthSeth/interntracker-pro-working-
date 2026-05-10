@@ -338,7 +338,7 @@ function renderDashboard(container) {
   `;
   fetchVaultFiles().then((files) => {
     const internships = getInternships();
-    const activeInternships = internships.filter((item) => ['Interviewing', 'Offer', 'Ongoing', 'completed'].includes(item.status)).length;
+    const activeInternships = internships.filter((item) => ['Interviewing', 'Offer', 'Ongoing'].includes(item.status)).length;
     const upcomingCount = internships.filter((item) => {
       if (!item.end_date || item.is_ongoing) return false;
       const deadline = new Date(item.end_date);
@@ -624,8 +624,9 @@ function renderInternshipTracker(container) {
 function renderInternshipSummary() {
   const summary = document.getElementById('internshipSummary');
   const internships = getInternships();
-  const total = internships.length;
+  const applied = internships.filter((item) => item.status === 'Applied').length;
   const ongoing = internships.filter((item) => item.status === 'Ongoing').length;
+  const completed = internships.filter((item) => item.status === 'Completed').length;
   const offers = internships.filter((item) => item.status === 'Offer').length;
   const upcoming = internships.filter((item) => {
     if (!item.end_date || item.is_ongoing) return false;
@@ -633,8 +634,9 @@ function renderInternshipSummary() {
     return diff >= 0 && diff <= 30;
   }).length;
   summary.innerHTML = [
-    { title: 'Total internships', value: total },
+    { title: 'Applied', value: applied },
     { title: 'Ongoing', value: ongoing },
+    { title: 'Completed', value: completed },
     { title: 'Offers', value: offers },
     { title: 'Upcoming deadlines', value: upcoming },
   ].map((item) => `
@@ -737,6 +739,7 @@ function showInternshipModal(id) {
               <option value="Interviewing">Interviewing</option>
               <option value="Offer">Offer</option>
               <option value="Ongoing">Ongoing</option>
+              <option value="Completed">Completed</option>
               <option value="Rejected">Rejected</option>
             </select>
           </label>
@@ -801,6 +804,7 @@ function renderBadge(status) {
     Interviewing: 'bg-[#1c1326] text-[#dbb8ff]',
     Offer: 'bg-[#1f1609] text-[#ffb596]',
     Ongoing: 'bg-[#0a1828] text-[#9cd3ff]',
+    Completed: 'bg-[#13351e] text-[#8ef0a5]',
     Rejected: 'bg-[#2f1413] text-[#ffb4ab]',
   }[status] || 'bg-[#17202a] text-[#c1c6d7]';
   return `<span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold ${tone}">${status || 'Unknown'}</span>`;
