@@ -338,7 +338,7 @@ function renderDashboard(container) {
   `;
   fetchVaultFiles().then((files) => {
     const internships = getInternships();
-    const activeInternships = internships.filter((item) => ['Interviewing', 'Offer', 'Ongoing'].includes(item.status)).length;
+    const activeInternships = internships.filter((item) => ['Interviewing', 'Offer', 'Ongoing', 'completed'].includes(item.status)).length;
     const upcomingCount = internships.filter((item) => {
       if (!item.end_date || item.is_ongoing) return false;
       const deadline = new Date(item.end_date);
@@ -600,6 +600,7 @@ function renderInternshipTracker(container) {
               <option value="Interviewing">Interviewing</option>
               <option value="Offer">Offer</option>
               <option value="Ongoing">Ongoing</option>
+              <option value="Completed">Completed</option>
               <option value="Rejected">Rejected</option>
             </select>
             <button id="clearSearchButton" class="inline-flex items-center justify-center rounded-3xl border border-[#414754] px-4 py-3 text-sm text-[#aec6ff] hover:border-[#aec6ff]">Clear search</button>
